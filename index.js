@@ -3,6 +3,7 @@ import express from 'express'
 import Hello from "./Hello.js"
 import Lab5 from "./Lab5/index.js";
 import UserRoutes from "./Kanbas/Users/routes.js";
+import CourseRoutes from "./Kanbas/Courses/routes.js";
 import cors from "cors";
 import session from "express-session";
 
@@ -32,4 +33,5 @@ app.use(express.json());
 Lab5(app);
 Hello(app);
 UserRoutes(app);
+CourseRoutes(app);
 app.listen(process.env.PORT || 4000);
