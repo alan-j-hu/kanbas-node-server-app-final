@@ -29,4 +29,14 @@ export default function CourseRoutes(app) {
     const modules = assignmentsDao.findAssignmentsForCourse(courseId);
     res.json(modules);
   });
+
+  app.post("/api/courses/:courseId/assignments", (req, res) => {
+    const { courseId } = req.params;
+    const assignment = {
+      ...req.body,
+      course: courseId,
+    };
+    const newAssignment = assignmentsDao.createAssignment(assignment);
+    res.send(newAssignment);
+  });
 }

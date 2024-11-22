@@ -8,8 +8,8 @@ export function updateAssignment(assignmentId, assignmentUpdates) {
 }
 
 export function deleteAssignment(assignmentId) {
- const { assignments } = Database;
- Database.assignments = assignments.filter((assignment) => assignment._id !== assignmentId);
+  const { assignments } = Database;
+  Database.assignments = assignments.filter((assignment) => assignment._id !== assignmentId);
 }
 
 export function createAssignment(assignment) {
