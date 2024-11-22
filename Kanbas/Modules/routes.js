@@ -1,4 +1,5 @@
 import * as modulesDao from "./dao.js";
+
 export default function ModuleRoutes(app) {
   app.put("/api/modules/:moduleId", (req, res) => {
     const { moduleId } = req.params;
@@ -11,4 +12,5 @@ export default function ModuleRoutes(app) {
     const status = modulesDao.deleteModule(moduleId);
     res.send(status);
   });
+
 }
