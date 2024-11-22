@@ -1,5 +1,8 @@
-let todos = [ { id: 1, title: "Task 1", completed: false },  { id: 2, title: "Task 2", completed: true },
-              { id: 3, title: "Task 3", completed: false },  { id: 4, title: "Task 4", completed: true }, ];
+let todos = [
+    { id: 1, title: "Task 1", completed: false, description: "A" },
+    { id: 2, title: "Task 2", completed: true, description: "B" },
+    { id: 3, title: "Task 3", completed: false, description: "C" },
+    { id: 4, title: "Task 4", completed: true, description: "D" }, ];
 export default function WorkingWithArrays(app) {
   app.get("/lab5/todos/create", (req, res) => {
     const newTodo = {
@@ -18,7 +21,6 @@ export default function WorkingWithArrays(app) {
 
 
   app.get("/lab5/todos", (req, res) => {
-    res.json(todos);
     const { completed } = req.query;
     if (completed !== undefined) {
       const completedBool = completed === "true";
@@ -27,7 +29,7 @@ export default function WorkingWithArrays(app) {
       res.json(completedTodos);
       return;
     }
-
+    res.json(todos);
   });
   app.get("/lab5/todos/:id", (req, res) => {
     const { id } = req.params;
@@ -74,6 +76,28 @@ export default function WorkingWithArrays(app) {
       return t;
     });
     res.sendStatus(200);
+  });
+
+  app.get("/lab5/todos/:id/completed/:completed", (req, res) => {
+    const { id, completed } = req.params;
+    const todo = todos.find((t) => t.id === parseInt(id));
+    if (todo === undefined) {
+      res.status(404).json({ message: `Unable to update Todo with ID ${id}` });
+      return;
+    }
+    todo.completed = (completed === 'true');
+    res.json(todos);
+  });
+
+  app.get("/lab5/todos/:id/description/:description", (req, res) => {
+    const { id, description } = req.params;
+    const todo = todos.find((t) => t.id === parseInt(id));
+    if (todo === undefined) {
+      res.status(404).json({ message: `Unable to update Todo with ID ${id}` });
+      return;
+    }
+    todo.description = description;
+    res.json(todos);
   });
 
 };
