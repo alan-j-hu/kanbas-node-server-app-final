@@ -42,19 +42,19 @@ export default function CourseRoutes(app) {
     res.send(newModule);
   });
 
-  app.get("/api/courses/:courseId/assignments", (req, res) => {
+  app.get("/api/courses/:courseId/assignments", async (req, res) => {
     const { courseId } = req.params;
-    const modules = assignmentsDao.findAssignmentsForCourse(courseId);
+    const modules = await assignmentsDao.findAssignmentsForCourse(courseId);
     res.json(modules);
   });
 
-  app.post("/api/courses/:courseId/assignments", (req, res) => {
+  app.post("/api/courses/:courseId/assignments", async (req, res) => {
     const { courseId } = req.params;
     const assignment = {
       ...req.body,
       course: courseId,
     };
-    const newAssignment = assignmentsDao.createAssignment(assignment);
+    const newAssignment = await assignmentsDao.createAssignment(assignment);
     res.send(newAssignment);
   });
 }

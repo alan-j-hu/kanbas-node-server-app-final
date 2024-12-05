@@ -14,6 +14,7 @@ export function createModule(module) {
 }
 
 export function findModulesForCourse(courseId) {
+  console.log(courseId);
   return model.find({ course: courseId });
 }
 
