@@ -1,5 +1,4 @@
 import model from "./model.js";
-import Database from "../Database/index.js";
 
 export function updateAssignment(assignmentId, assignmentUpdates) {
   return model.updateOne({ _id: assignmentId }, assignmentUpdates);
