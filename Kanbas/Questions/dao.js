@@ -37,7 +37,6 @@ export function deleteQuestion(id) {
 
 // Update question
 export async function updateQuestion(questionId, questionUpdates) {
-
     const question = await BaseQuestionModel.findById(questionId);
     if (!question) {
         throw new Error("Question not found.");
@@ -46,11 +45,20 @@ export async function updateQuestion(questionId, questionUpdates) {
     // Update the question based on its type
     switch (question.type) {
         case "Multiple Choice":
-            return MultipleChoiceQuestionModel.updateOne({ _id: questionId }, { $set: questionUpdates });
+            return MultipleChoiceQuestionModel.updateOne(
+                { _id: questionId },
+                { $set: questionUpdates }
+            );
         case "True/False":
-            return TrueFalseQuestionModel.updateOne({ _id: questionId }, { $set: questionUpdates });
+            return TrueFalseQuestionModel.updateOne(
+                { _id: questionId },
+                { $set: questionUpdates }
+            );
         case "Fill in the Blank":
-            return FillInTheBlankQuestionModel.updateOne({ _id: questionId }, { $set: questionUpdates });
+            return FillInTheBlankQuestionModel.updateOne(
+                { _id: questionId },
+                { $set: questionUpdates }
+            );
         default:
             throw new Error("Invalid question type.");
     }

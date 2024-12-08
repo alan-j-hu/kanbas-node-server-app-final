@@ -234,19 +234,31 @@ export default function UserRoutes(app) {
     }
 
     const { quizId } = req.params;
+    const { type, title, question, points, choices, correct_answers } = req.body;
+
+    // Ensure required fields are provided
+    if (!type || !title || !question || !points) {
+      return res
+        .status(400)
+        .json({ error: "Missing required fields: type, title, question, or points." });
+    }
+
     const questionData = {
-      ...req.body,
       quiz_id: quizId,
+      type,
+      title,
+      question,
+      points,
+      choices: type === "Multiple Choice" ? choices : undefined,
+      correct_answers: type === "Fill in the Blank" ? correct_answers : undefined,
     };
 
     try {
-      // Create a new question
+      // Create the new question
       const newQuestion = await questionsDao.createQuestion(questionData);
 
-      // Add the question ID to the quiz's questions array
-      const updatedQuiz = await quizzesDao.updateQuiz(quizId, {
-        $push: { questions: newQuestion._id },
-      });
+      // Link the new question to the quiz
+      const updatedQuiz = await quizzesDao.updateQuiz(quizId, { $push: { questions: newQuestion._id } });
 
       if (!updatedQuiz) {
         return res.status(404).json({ error: "Quiz not found." });
@@ -261,28 +273,7 @@ export default function UserRoutes(app) {
     }
   });
 
-
   // Teacher gets a question by ID
-  app.get("/api/users/current/quizzes/:quizId/questions/:questionId", async (req, res) => {
-    const currentUser = req.session["currentUser"];
-    if (!currentUser) {
-      res.sendStatus(401);
-      return;
-    }
-    const { questionId } = req.params;
-
-    try {
-      const question = await questionsDao.getQuestionById(questionId);
-      if (!question) {
-        return res.status(404).json({ error: "Question not found." });
-      }
-      res.status(200).json(question);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  // Teacher updates a question
   app.put("/api/users/current/quizzes/:quizId/questions/:questionId", async (req, res) => {
     const currentUser = req.session["currentUser"];
     if (!currentUser || currentUser.role !== "FACULTY") {
@@ -301,6 +292,38 @@ export default function UserRoutes(app) {
       res.status(400).json({ error: error.message });
     }
   });
+
+
+  // Teacher updates a question
+  app.put("/api/users/current/quizzes/:quizId/questions/:questionId", async (req, res) => {
+    const currentUser = req.session["currentUser"];
+    if (!currentUser || currentUser.role !== "FACULTY") {
+      res.sendStatus(403);
+      return;
+    }
+    const { questionId } = req.params;
+    const { question, points, choices, correct_answers } = req.body;
+
+    if (!question) {
+      return res.status(400).json({ error: "Question field is required." });
+    }
+
+    try {
+      const updatedQuestion = await questionsDao.updateQuestion(questionId, {
+        question,
+        points,
+        choices,
+        correct_answers,
+      });
+      if (!updatedQuestion) {
+        return res.status(404).json({ error: "Question not found." });
+      }
+      res.status(200).json(updatedQuestion);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
 
   // Teacher deletes a question
   app.delete("/api/users/current/quizzes/:quizId/questions/:questionId", async (req, res) => {
@@ -367,9 +390,21 @@ export default function UserRoutes(app) {
       if (!quiz) {
         return res.status(404).json({ error: "Quiz not found." });
       }
+
       const questions = await questionsDao.getQuestionsByQuizId(quizId);
-      const lastAttempt = await attemptsDao.findAttemptsByUserAndQuiz(currentUser._id, quizId);
-      res.status(200).json({ quiz, questions, lastAttempt });
+
+      // Retrieve only the latest attempt
+      const lastAttempt = await attemptsDao
+        .findAttemptsByUserAndQuiz(currentUser._id, quizId)
+        .sort({ end_time: -1 })
+        .limit(1)
+        .exec();
+
+      res.status(200).json({
+        quiz,
+        questions,
+        lastAttempt: lastAttempt.length > 0 ? lastAttempt[0] : null,
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -484,7 +519,8 @@ export default function UserRoutes(app) {
     }
   });
 
-  // Teacher updates a question
+  // Teacher updates a question, 
+  // functionally the same as PUT /api/users/current/quizzes/:quizId/questions/:questionId but using PATCH makes it more RESTful
   app.patch("/api/users/current/quizzes/:quizId/questions/:questionId", async (req, res) => {
     const currentUser = req.session["currentUser"];
     if (!currentUser || currentUser.role !== "FACULTY") {

@@ -22,11 +22,8 @@ const baseQuestionSchema = new mongoose.Schema(
             required: true,
             min: 0,
         },
-        explanation: {
+        question: {
             type: String,
-        },
-        hints: {
-            type: [String],
         },
     },
     { discriminatorKey: "type", collection: "questions" }
