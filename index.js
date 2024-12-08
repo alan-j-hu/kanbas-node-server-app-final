@@ -8,6 +8,9 @@ import CourseRoutes from "./Kanbas/Courses/routes.js";
 import ModuleRoutes from "./Kanbas/Modules/routes.js";
 import AssignmentRoutes from "./Kanbas/Assignments/routes.js";
 import EnrollmentRoutes from "./Kanbas/Enrollments/routes.js";
+import QuizzesRoutes from "./Kanbas/Quizzes/routes.js";
+import QuestionsRoutes from "./Kanbas/Questions/routes.js";
+import AttemptRoutes from "./Kanbas/Attempts/routes.js";
 import cors from "cors";
 import session from "express-session";
 
@@ -46,4 +49,7 @@ CourseRoutes(app);
 ModuleRoutes(app);
 AssignmentRoutes(app);
 EnrollmentRoutes(app);
+QuizzesRoutes(app);
+QuestionsRoutes(app);
+AttemptRoutes(app);
 app.listen(process.env.PORT || 4000);
