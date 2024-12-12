@@ -3,16 +3,6 @@ import mongoose from "mongoose";
 // Base Question Schema
 const baseQuestionSchema = new mongoose.Schema(
     {
-        quiz_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "QuizModel",
-            required: true,
-        },
-        type: {
-            type: String,
-            enum: ["Multiple Choice", "True/False", "Fill in the Blank"],
-            required: true,
-        },
         title: {
             type: String,
             required: true,
@@ -26,7 +16,7 @@ const baseQuestionSchema = new mongoose.Schema(
             type: String,
         },
     },
-    { discriminatorKey: "type", collection: "questions" }
+    { discriminatorKey: "kind", collection: "questions" }
 );
 
 // Choice Schema
@@ -37,12 +27,12 @@ const multipleChoiceSchema = new mongoose.Schema({
             is_correct: { type: Boolean, required: true },
         },
     ],
-});
+}, { discriminatorKey: "kind" });
 
 // True/False Schema
 const trueFalseSchema = new mongoose.Schema({
     correct_answer: { type: Boolean, required: true },
-});
+}, { discriminatorKey: "kind" });
 
 // blank Schema
 const fillInTheBlankSchema = new mongoose.Schema({
@@ -52,7 +42,7 @@ const fillInTheBlankSchema = new mongoose.Schema({
             case_insensitive: { type: Boolean, default: false }, // Default to case-sensitive matching
         },
     ],
-});
+}, { discriminatorKey: "kind" });
 
 // export all schemas
 export {

@@ -5,19 +5,19 @@ const BaseQuestionModel = mongoose.model("Question", baseQuestionSchema);
 
 // Multiple Choice Model
 const MultipleChoiceQuestionModel = BaseQuestionModel.discriminator(
-    "Multiple Choice",
+    "MultipleChoice",
     multipleChoiceSchema
 );
 
 // True/False Model
 const TrueFalseQuestionModel = BaseQuestionModel.discriminator(
-    "True/False",
+    "TrueFalse",
     trueFalseSchema
 );
 
 // Fill in the Blank Model
 const FillInTheBlankQuestionModel = BaseQuestionModel.discriminator(
-    "Fill in the Blank",
+    "FillInTheBlank",
     fillInTheBlankSchema
 );
 

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { baseQuestionSchema } from "../Questions/schema.js"
 
 const quizSchema = new mongoose.Schema(
     {
@@ -10,9 +11,9 @@ const quizSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        quiz_type: {
+        quizType: {
             type: String,
-            enum: ["Graded Quiz", "Practice Quiz", "Survey"],
+            enum: ["GradedQuiz", "PracticeQuiz", "Survey"],
             required: true,
         },
         points: {
@@ -20,54 +21,47 @@ const quizSchema = new mongoose.Schema(
             required: true,
             min: 0,
         },
-        questions: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Question",
-            },
-        ],
-        shuffle_answers: {
+        questions: [ baseQuestionSchema ],
+        shuffleAnswers: {
             type: Boolean,
             default: true,
         },
-        time_limit: {
+        timeLimit: {
             type: Number,
             default: null,
         },
-        multiple_attempts: {
+        multipleAttempts: {
             type: Boolean,
             default: false,
         },
-        max_attempts: {
+        maxAttempts: {
             type: Number,
             default: 1,
         },
-        show_correct_answers: {
+        showCorrectAnswers: {
             type: String,
-            enum: ["Never", "After Due Date", "Immediately"],
+            enum: ["Never", "AfterDueDate", "Immediately"],
             default: "Never",
         },
-        access_code: {
+        accessCode: {
             type: String,
             default: "",
         },
-        webcam_required: {
+        oneAuestionAtATime: { type: Boolean, default: false },
+        webcamRequired: { type: Boolean, default: false },
+        lockQuestionsAfterAnswering: {
             type: Boolean,
             default: false,
         },
-        lock_questions_after_answering: {
-            type: Boolean,
-            default: false,
-        },
-        due_date: {
+        dueDate: {
             type: Date,
             required: true,
         },
-        available_date: {
+        availableDate: {
             type: Date,
             required: true,
         },
-        until_date: {
+        untilDate: {
             type: Date,
             required: true,
         },
@@ -75,7 +69,7 @@ const quizSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        course_id: {
+        courseId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "CourseModel",
             required: true,

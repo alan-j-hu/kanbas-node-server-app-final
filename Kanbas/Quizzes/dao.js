@@ -7,12 +7,12 @@ export function createQuiz(quizData) {
 
 // Get all quizzes by course ID
 export function getQuizzesByCourseId(courseId) {
-    return QuizModel.find({ course_id: courseId }).populate("questions");
+    return QuizModel.find({ courseId: courseId });
 }
 
 // Get a single quiz
 export function getQuizById(quizId) {
-    return QuizModel.findById(quizId).populate("questions");
+    return QuizModel.findById(quizId);
 }
 
 // Update a quiz
