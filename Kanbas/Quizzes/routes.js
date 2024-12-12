@@ -2,7 +2,7 @@ import * as quizzesDao from "./dao.js";
 
 export default function QuizRoutes(app) {
     // Create a new quiz
-    app.post("/api/quizzes", async (req, res) => {
+    app.post("/api/courses/:courseId/quizzes", async (req, res) => {
         try {
             const newQuiz = await quizzesDao.createQuiz(req.body);
             res.status(201).json(newQuiz);
@@ -10,7 +10,6 @@ export default function QuizRoutes(app) {
             res.status(400).json({ error: error.message });
         }
     });
-
     // Get all quizzes by course ID
     app.get("/api/courses/:courseId/quizzes", async (req, res) => {
         try {
