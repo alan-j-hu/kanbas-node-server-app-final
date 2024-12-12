@@ -53,18 +53,9 @@ const quizSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        dueDate: {
-            type: Date,
-            required: true,
-        },
-        availableDate: {
-            type: Date,
-            required: true,
-        },
-        untilDate: {
-            type: Date,
-            required: true,
-        },
+        due: { type: Date, required: true, },
+        available: { type: Date, required: true, },
+        until: { type: Date, required: true, },
         published: {
             type: Boolean,
             default: false,
